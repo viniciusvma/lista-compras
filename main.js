@@ -1,10 +1,18 @@
-const produto = document.querySelector('.product')
-const valor = document.querySelector('.value')
-const adicionar = document.querySelector('.add')
+const produto = document.querySelector('.product');
+const valor = document.querySelector('.value');
+const adicionar = document.querySelector('.add');
+const tbody = document.querySelector('.table-list tbody');
+const somaTotal = document.querySelector('.footer-list h3');
 
-let listaProdutos = []
-let contador = 0
-let somaValor = 0
+let listaProdutos = [];
+let contador = 0;
+let somaValor = 0;
+
+// Verifica se há dados salvos na localStorage
+if(localStorage.getItem('listaProdutos')) {
+    listaProdutos = JSON.parse(localStorage.getItem('listaProdutos'));
+    listarProdutos();
+}
 
 function adicionarProdutos() {
     listaProdutos.push({
@@ -14,17 +22,16 @@ function adicionarProdutos() {
     });
 
     let valorNumerico = parseFloat(valor.value);
-    somaValor = somaValor + valorNumerico
+    somaValor = somaValor + valorNumerico;
 
-    produto.value = ''
-    valor.value = ''
+    produto.value = '';
+    valor.value = '';
 
-    listarProdutos()
+    salvarLocalStorage();
+    listarProdutos();
 }
 
 function listarProdutos() {
-    const tbody = document.querySelector('.table-list tbody');
-
     tbody.innerHTML = '';
 
     listaProdutos.forEach(item => {
@@ -46,16 +53,18 @@ function listarProdutos() {
         tbody.appendChild(row);
     });
 
-    totalProdutos()
+    totalProdutos();
 }
 
 function totalProdutos() {
-    const somaTotal = document.querySelector('.footer-list h3');
-
     somaTotal.textContent = `Total: R$ ${somaValor.toFixed(2)}`;
 }
 
-adicionar.addEventListener('click', adicionarProdutos)
+function salvarLocalStorage() {
+    localStorage.setItem('listaProdutos', JSON.stringify(listaProdutos));
+}
+
+adicionar.addEventListener('click', adicionarProdutos);
 
 document.addEventListener('click', function (event) {
     if (event.target.classList.contains('cancel-image')) {
@@ -70,6 +79,7 @@ document.addEventListener('click', function (event) {
 
         somaValor -= parseFloat(row.children[1].textContent.replace('R$ ', ''));
 
+        salvarLocalStorage();
         totalProdutos();
     }
 });
