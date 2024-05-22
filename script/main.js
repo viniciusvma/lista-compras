@@ -37,7 +37,8 @@ function adicionarProdutos() {
 
 function listarProdutos() {
     tbody.innerHTML = '';
-
+    somaValor = 0;
+    
     listaProdutos.forEach(item => {
         const row = document.createElement('tr');
 
@@ -55,6 +56,8 @@ function listarProdutos() {
         row.appendChild(cellCancel);
 
         tbody.appendChild(row);
+
+        somaValor += parseFloat(item.l_valor);
     });
 
     totalProdutos();
